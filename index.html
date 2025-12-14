@@ -1,0 +1,764 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>復縁タロット｜今あの人の気持ちは？</title>
+
+  <!-- ✅ CSSはこの<style>内に全部入っています（外部ファイル不要） -->
+  <style>
+  :root{
+    --bg1:#0b0a14;
+    --bg2:#120b2a;
+    --card:#0f1124cc;
+    --stroke:rgba(255,255,255,.10);
+    --text:#eef0ff;
+    --muted:rgba(238,240,255,.72);
+    --muted2:rgba(238,240,255,.55);
+
+    --a:#b18cff;     /* lavender */
+    --b:#ff7bd5;     /* pink */
+    --c:#7bf0ff;     /* aqua */
+
+    --shadow: 0 20px 60px rgba(0,0,0,.55);
+    --r: 22px;
+  }
+
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;
+    font-family: ui-sans-serif, system-ui, -apple-system, "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Yu Gothic", sans-serif;
+    color:var(--text);
+    background: radial-gradient(1200px 700px at 15% 10%, rgba(177,140,255,.18), transparent 55%),
+                radial-gradient(900px 600px at 85% 15%, rgba(255,123,213,.16), transparent 55%),
+                radial-gradient(900px 600px at 60% 90%, rgba(123,240,255,.10), transparent 60%),
+                linear-gradient(160deg, var(--bg1), var(--bg2));
+    overflow-x:hidden;
+  }
+
+  .bg{
+    position:fixed; inset:-2px;
+    pointer-events:none;
+    background:
+      radial-gradient(2px 2px at 20% 30%, rgba(255,255,255,.45), transparent 60%),
+      radial-gradient(2px 2px at 70% 20%, rgba(255,255,255,.35), transparent 60%),
+      radial-gradient(1.5px 1.5px at 40% 70%, rgba(255,255,255,.28), transparent 60%),
+      radial-gradient(1.5px 1.5px at 80% 75%, rgba(255,255,255,.22), transparent 60%);
+    opacity:.35;
+    filter: blur(.2px);
+  }
+
+  .wrap{
+    width:min(1100px, 92vw);
+    margin: 24px auto 60px;
+  }
+
+  .top{
+    width:min(1100px, 92vw);
+    margin: 32px auto 6px;
+  }
+
+  .brand{
+    display:flex; align-items:center; gap:12px;
+    margin-bottom:14px;
+  }
+
+  .sigil{
+    width:44px; height:44px; border-radius:14px;
+    display:grid; place-items:center;
+    background: linear-gradient(135deg, rgba(177,140,255,.25), rgba(255,123,213,.18));
+    border:1px solid var(--stroke);
+    box-shadow: 0 12px 30px rgba(0,0,0,.35);
+    font-size:18px;
+  }
+
+  .kicker{
+    margin:0;
+    letter-spacing:.12em;
+    color:var(--muted2);
+    font-size:12px;
+    text-transform:uppercase;
+  }
+
+  h1{
+    margin:2px 0 0;
+    font-size:26px;
+    letter-spacing:.02em;
+  }
+
+  .lead{
+    margin: 10px 0 0;
+    color:var(--muted);
+    line-height:1.7;
+  }
+
+  .lead .sub{ color:var(--muted2); }
+
+  .card{
+    background: var(--card);
+    border:1px solid var(--stroke);
+    border-radius: var(--r);
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(10px);
+    padding: 22px;
+  }
+
+  .card.slim{ margin-top:18px; }
+
+  .card-head h2{
+    margin:0;
+    font-size:18px;
+    letter-spacing:.02em;
+  }
+
+  .note{
+    margin: 10px 0 0;
+    color:var(--muted2);
+    line-height:1.7;
+    font-size:13px;
+  }
+
+  .grid{
+    display:grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap:18px;
+    margin-top:18px;
+  }
+
+  @media (max-width: 900px){
+    .grid{ grid-template-columns:1fr; }
+  }
+
+  .deck{
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+    align-items:flex-start;
+  }
+
+  .tarot-card{
+    width: 240px;
+    height: 340px;
+    border-radius: 22px;
+    border:1px solid rgba(255,255,255,.14);
+    background:
+      radial-gradient(500px 300px at 50% 20%, rgba(177,140,255,.25), transparent 60%),
+      radial-gradient(500px 300px at 50% 90%, rgba(255,123,213,.18), transparent 60%),
+      linear-gradient(165deg, rgba(255,255,255,.08), rgba(255,255,255,.02));
+    box-shadow: 0 16px 40px rgba(0,0,0,.55);
+    position:relative;
+    overflow:hidden;
+    cursor:pointer;
+    user-select:none;
+    transform: translateZ(0);
+  }
+
+  .tarot-card::before{
+    content:"";
+    position:absolute; inset:-2px;
+    background:
+      conic-gradient(from 0deg, rgba(177,140,255,.55), rgba(255,123,213,.45), rgba(123,240,255,.40), rgba(177,140,255,.55));
+    opacity:.0;
+    filter: blur(16px);
+    transition: opacity .35s ease;
+  }
+
+  .tarot-card:hover::before{ opacity:.28; }
+
+  .card-face{
+    position:absolute; inset:14px;
+    border-radius: 18px;
+    border:1px solid rgba(255,255,255,.12);
+    background:
+      radial-gradient(240px 180px at 50% 30%, rgba(255,255,255,.09), transparent 60%),
+      linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    gap:14px;
+  }
+
+  .ornament{
+    width:56px; height:56px; border-radius:18px;
+    display:grid; place-items:center;
+    border:1px solid rgba(255,255,255,.16);
+    background: rgba(0,0,0,.18);
+  }
+
+  .title{
+    letter-spacing:.28em;
+    font-size:14px;
+    color:rgba(238,240,255,.78);
+  }
+
+  .hint{
+    font-size:12px;
+    color:rgba(238,240,255,.55);
+  }
+
+  .actions{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+
+  .btn{
+    border:none;
+    border-radius: 999px;
+    padding: 10px 14px;
+    font-weight:700;
+    letter-spacing:.02em;
+    cursor:pointer;
+    transition: transform .08s ease, filter .2s ease, opacity .2s ease;
+    text-decoration:none;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+  }
+
+  .btn:active{ transform: translateY(1px) scale(.99); }
+
+  .btn.primary{
+    color:#0b0a14;
+    background: linear-gradient(135deg, var(--a), var(--b));
+    box-shadow: 0 14px 30px rgba(177,140,255,.16);
+  }
+
+  .btn.ghost{
+    color:var(--text);
+    background: rgba(255,255,255,.06);
+    border:1px solid rgba(255,255,255,.12);
+  }
+
+  .btn:hover{ filter: brightness(1.06); }
+
+  .chips{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+  }
+
+  .chip{
+    background: rgba(255,255,255,.06);
+    border:1px solid rgba(255,255,255,.12);
+    color: rgba(238,240,255,.8);
+    padding: 8px 12px;
+    border-radius: 999px;
+    cursor:pointer;
+    font-size:12px;
+  }
+
+  .chip.is-active{
+    background: rgba(177,140,255,.18);
+    border-color: rgba(177,140,255,.35);
+    color: rgba(238,240,255,.95);
+  }
+
+  .result{
+    border-radius: 18px;
+    border:1px solid rgba(255,255,255,.10);
+    background:
+      radial-gradient(500px 260px at 20% 0%, rgba(177,140,255,.18), transparent 60%),
+      radial-gradient(500px 260px at 80% 0%, rgba(255,123,213,.14), transparent 60%),
+      rgba(0,0,0,.18);
+    padding: 18px 18px 16px;
+    min-height: 340px;
+    position:relative;
+    overflow:hidden;
+  }
+
+  .result.is-glow::before{
+    content:"";
+    position:absolute; inset:-2px;
+    background: conic-gradient(from 180deg, rgba(177,140,255,.6), rgba(255,123,213,.55), rgba(123,240,255,.45), rgba(177,140,255,.6));
+    opacity:.16;
+    filter: blur(16px);
+  }
+
+  .result-top{
+    display:flex; align-items:center; justify-content:space-between;
+    gap:10px;
+  }
+
+  .badge{
+    margin:0;
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: rgba(255,255,255,.07);
+    border:1px solid rgba(255,255,255,.12);
+    color: rgba(238,240,255,.86);
+    font-size:12px;
+  }
+
+  .time{
+    margin:0;
+    color: rgba(238,240,255,.55);
+    font-size:12px;
+  }
+
+  .result-title{
+    margin: 12px 0 6px;
+    font-size:18px;
+    line-height:1.5;
+  }
+
+  .result-text{
+    margin: 0;
+    color: rgba(238,240,255,.75);
+    line-height:1.85;
+    font-size:14px;
+  }
+
+  .divider{
+    height:1px;
+    background: rgba(255,255,255,.10);
+    margin: 14px 0;
+  }
+
+  .mini-title{
+    margin:0 0 8px;
+    font-weight:800;
+    font-size:13px;
+    color: rgba(238,240,255,.88);
+  }
+
+  .mini-list{
+    margin:0;
+    padding-left: 18px;
+    color: rgba(238,240,255,.70);
+    line-height:1.75;
+    font-size:13px;
+  }
+
+  .cta{
+    margin-top: 14px;
+    padding: 14px 14px 12px;
+    border-radius: 16px;
+    border:1px solid rgba(255,255,255,.12);
+    background: rgba(255,255,255,.04);
+  }
+
+  .cta-title{
+    margin:0 0 6px;
+    font-weight:900;
+    font-size:14px;
+  }
+
+  .cta-text{
+    margin:0 0 12px;
+    color: rgba(238,240,255,.68);
+    line-height:1.75;
+    font-size:13px;
+  }
+
+  .cta-btn{ width:100%; }
+
+  .cta-note{
+    margin:10px 0 0;
+    color: rgba(238,240,255,.50);
+    font-size:11px;
+  }
+
+  .code{
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Noto Sans Mono", monospace;
+    background: rgba(255,255,255,.06);
+    border:1px solid rgba(255,255,255,.10);
+    padding: 2px 8px;
+    border-radius: 999px;
+  }
+
+  .foot{
+    margin-top: 18px;
+    color: rgba(238,240,255,.45);
+    text-align:center;
+    font-size:12px;
+  }
+
+  @keyframes flipIn{
+    0%{ transform: rotateY(0deg) scale(1); }
+    40%{ transform: rotateY(90deg) scale(.98); }
+    60%{ transform: rotateY(120deg) scale(1.02); }
+    100%{ transform: rotateY(0deg) scale(1); }
+  }
+
+  @keyframes pulse{
+    0%{ transform: scale(1); }
+    50%{ transform: scale(1.015); }
+    100%{ transform: scale(1); }
+  }
+
+  .tarot-card.is-flip{ animation: flipIn .55s ease; }
+  .result.is-glow{ animation: pulse .6s ease; }
+  </style>
+</head>
+<body>
+  <div class="bg"></div>
+
+  <header class="top">
+    <div class="brand">
+      <div class="sigil" aria-hidden="true">✦</div>
+      <div>
+        <p class="kicker">Reunion Tarot</p>
+        <h1>復縁タロット占い</h1>
+      </div>
+    </div>
+
+    <p class="lead">
+      いま、あの人はあなたをどう想っている？<br/>
+      <span class="sub">“1枚引き”で、復縁の可能性と次の一手を見ます。</span>
+    </p>
+  </header>
+
+  <main class="wrap">
+    <section class="card">
+      <div class="card-head">
+        <h2>1枚引き｜今の状況を読む</h2>
+        <p class="note">深呼吸して、心の中で「あの人」を思い浮かべてください。</p>
+      </div>
+
+      <div class="grid">
+        <div class="left">
+          <div class="deck">
+            <div class="tarot-card" id="tarotCard" aria-label="タロットカード">
+              <div class="card-face">
+                <div class="ornament">✧</div>
+                <div class="title">TAROT</div>
+                <div class="hint">タップして引く</div>
+              </div>
+            </div>
+
+            <div class="actions">
+              <button class="btn primary" id="drawBtn">カードを引く</button>
+              <button class="btn ghost" id="resetBtn">リセット</button>
+            </div>
+
+            <div class="chips" aria-label="占いの選択">
+              <button class="chip is-active" data-mode="feelings">あの人の気持ち</button>
+              <button class="chip" data-mode="next">次に起こること</button>
+              <button class="chip" data-mode="advice">復縁のアドバイス</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="right">
+          <div class="result" id="resultArea" aria-live="polite">
+            <div class="result-top">
+              <p class="badge" id="resultBadge">準備中</p>
+              <p class="time" id="resultTime">—</p>
+            </div>
+
+            <h3 class="result-title" id="resultTitle">カードを引くと、ここに結果が出ます</h3>
+            <p class="result-text" id="resultText">
+              今のあなたに必要なメッセージを、やさしく具体的にお届けします。
+            </p>
+
+            <div class="divider"></div>
+
+            <div class="mini">
+              <p class="mini-title">おすすめ行動（今日〜3日）</p>
+              <ul class="mini-list" id="resultList">
+                <li>カードを引いたら、行動が表示されます</li>
+              </ul>
+            </div>
+
+            <div class="cta" id="app">
+              <p class="cta-title">もっと深く知りたいあなたへ</p>
+              <p class="cta-text">
+                相手の本音・連絡のタイミング・既読スルーの意味まで。<br/>
+                プロ監修の「復縁特化」鑑定で、次の一手を最短で。
+              </p>
+              <a class="btn primary cta-btn" href="#" id="appBtn">占いアプリで無料チェック →</a>
+              <p class="cta-note">※リンクはあなたのアプリURLに差し替えてOK</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card slim">
+      <h2>リンク差し替え方法</h2>
+      <p class="note">
+        script内の <span class="code">APP_URL</span> をあなたのアプリURLに変更してください。
+      </p>
+    </section>
+
+    <footer class="foot">
+      <p>© Reunion Tarot. あなたの幸せを応援しています。</p>
+    </footer>
+  </main>
+
+  <!-- ✅ JSもこの<script>内に全部入っています（外部ファイル不要） -->
+  <script>
+  const APP_URL = "https://example.com"; // ←ここをあなたのURLに変更
+  let mode = "feelings";
+
+  const TAROT = [
+    {
+      name: "恋人",
+      badge: "復縁チャンス：高め",
+      feelings: {
+        title: "相手の気持ち：まだ終わっていない",
+        text:
+          "あなたへの好意は残っています。今は“気まずさ”や“タイミングの迷い”で止まっている状態。重くならない距離感で、安心できる会話から戻すと進展しやすいです。",
+        actions: [
+          "連絡は短文でOK（近況＋一言質問）",
+          "夜遅すぎる連絡は避ける（相手が構える）",
+          "“責めない空気”を最優先にする"
+        ]
+      },
+      next: {
+        title: "次に起こること：小さな再接続",
+        text:
+          "偶然のきっかけ、または軽い用事から会話が戻ります。あなたが先に“柔らかい空気”を出すほど、相手は安心して反応しやすいでしょう。",
+        actions: [
+          "用事を1つ作る（借りてた物/おすすめ共有など）",
+          "返事が遅くても追いLINEしない",
+          "会話が戻ったら“会う”より先に“笑える話題”"
+        ]
+      },
+      advice: {
+        title: "復縁アドバイス：恋人モードを“再起動”",
+        text:
+          "復縁は“正しさ”より“心地よさ”。反省や説明は短く、相手が安心できるペースを作りましょう。あなたが落ち着いているほど、相手の心は戻りやすいです。",
+        actions: [
+          "謝罪は1回だけ、短く",
+          "相手の都合を尊重する言葉を入れる",
+          "次の連絡は48〜72時間あける"
+        ]
+      }
+    },
+    {
+      name: "節制",
+      badge: "復縁チャンス：じわ上げ",
+      feelings: {
+        title: "相手の気持ち：迷いはあるが嫌いじゃない",
+        text:
+          "相手は感情を揺らしたくなくて距離を取っています。あなたへの印象は悪くありません。焦るほど遠のくので、“ちょうどいい温度”が鍵です。",
+        actions: [
+          "スタンプだけで終わらせず一言添える",
+          "お願いは“軽く・1回”にする",
+          "話題は恋愛より日常（仕事/趣味）"
+        ]
+      },
+      next: {
+        title: "次に起こること：少しずつ会話が安定",
+        text:
+          "連絡のリズムが整い、ぎこちなさが減ります。落ち着いたやり取りができるほど、相手の警戒は自然にほどけていきます。",
+        actions: [
+          "週1〜2回の連絡ペースが理想",
+          "返信が来たら“ありがとう”を入れる",
+          "相手の話を7割、あなたは3割"
+        ]
+      },
+      advice: {
+        title: "復縁アドバイス：足し算より“引き算”",
+        text:
+          "やり直しは“押す”より“整える”。言い訳や長文より、短く優しい言葉が効果的です。相手の心に“余白”を作ってください。",
+        actions: [
+          "長文をやめて3行以内にする",
+          "反応が薄い日は“撤退”が正解",
+          "会う提案は“2択”にして負担を減らす"
+        ]
+      }
+    },
+    {
+      name: "月",
+      badge: "復縁チャンス：様子見",
+      feelings: {
+        title: "相手の気持ち：本音が隠れている",
+        text:
+          "相手は不安や疑いが残っていて、素直に出せていません。あなたが悪いというより、相手の中で気持ちの整理が途中。安心材料を積み上げると流れが変わります。",
+        actions: [
+          "感情をぶつけず“事実ベース”で話す",
+          "過去の話を掘り返さない",
+          "匂わせ投稿や試す行動はNG"
+        ]
+      },
+      next: {
+        title: "次に起こること：波がある反応",
+        text:
+          "返事が早い日と遅い日が混ざります。相手の気分に左右されやすいので、あなたは“安定”を見せるのが勝ち筋です。",
+        actions: [
+          "既読/未読を気にしすぎない",
+          "返信が薄い日は短く返して終える",
+          "2回続けてスルーなら一旦1週間空ける"
+        ]
+      },
+      advice: {
+        title: "復縁アドバイス：安心を“言葉”で渡す",
+        text:
+          "相手が怖がっているのは、関係がまた不安定になること。責めず、追わず、落ち着いた言葉で“安全”を示すほど、相手は戻りやすくなります。",
+        actions: [
+          "「無理に返さなくて大丈夫」を添える",
+          "褒める：外見より“性格/努力”",
+          "会うなら短時間（1〜2時間）"
+        ]
+      }
+    },
+    {
+      name: "皇帝",
+      badge: "復縁チャンス：主導権次第",
+      feelings: {
+        title: "相手の気持ち：自分のペースを守りたい",
+        text:
+          "相手は“コントロールされる”ことに敏感。あなたのことは嫌いではないけれど、主導権を握りたい気持ちが強いです。尊重が伝わると一気に好転します。",
+        actions: [
+          "提案はするが、決定は相手に任せる",
+          "詰める質問は1回まで",
+          "感謝を言葉にする（短く）"
+        ]
+      },
+      next: {
+        title: "次に起こること：相手からの打診",
+        text:
+          "あなたが落ち着くほど、相手側が様子を見て連絡してきます。“追わない余裕”が最大の魅力になります。",
+        actions: [
+          "3日待って相手にボールを渡す",
+          "相手が動いたらすぐ褒める",
+          "決めつけ口調をやめる"
+        ]
+      },
+      advice: {
+        title: "復縁アドバイス：相手の自尊心を守る",
+        text:
+          "このカードは“尊重”のカード。相手のペースと立場を大切にすると、関係は安定します。復縁後も長続きしやすい形に整えましょう。",
+        actions: [
+          "「あなたの考えを聞かせて」を使う",
+          "感情より要点（短く）",
+          "会う提案は平日夜より休日昼が◎"
+        ]
+      }
+    },
+    {
+      name: "世界",
+      badge: "復縁チャンス：かなり高い",
+      feelings: {
+        title: "相手の気持ち：もう一度、完成させたい",
+        text:
+          "相手は“やり直したらうまくいくかも”と感じています。過去の失敗を超えて、より良い関係にしたい気持ち。あなたが落ち着いて受け止めるとスムーズです。",
+        actions: [
+          "連絡は“明るく・短く”が勝ち",
+          "謝罪より未来の話を増やす",
+          "会話の最後は前向きに締める"
+        ]
+      },
+      next: {
+        title: "次に起こること：再会・関係の進展",
+        text:
+          "会う流れが作りやすい時期。無理に重い話をせず、楽しい時間を積むほど復縁が現実になります。",
+        actions: [
+          "会うなら“ご飯だけ”の軽い約束",
+          "昔の思い出話は“笑える範囲”で",
+          "会った後の追いLINEは翌日に1通"
+        ]
+      },
+      advice: {
+        title: "復縁アドバイス：今度は“同じミスをしない設計”",
+        text:
+          "復縁が見える時ほど大事なのはルール作り。“連絡頻度”“不安になった時の言い方”など、軽く話せる形で整えると長続きします。",
+        actions: [
+          "不安は責めずに相談する形へ",
+          "連絡頻度の希望を“提案”として伝える",
+          "嬉しかったことを言語化する"
+        ]
+      }
+    }
+  ];
+
+  const $ = (q) => document.querySelector(q);
+  const cardEl = $("#tarotCard");
+  const drawBtn = $("#drawBtn");
+  const resetBtn = $("#resetBtn");
+
+  const resultArea = $("#resultArea");
+  const resultBadge = $("#resultBadge");
+  const resultTime = $("#resultTime");
+  const resultTitle = $("#resultTitle");
+  const resultText = $("#resultText");
+  const resultList = $("#resultList");
+
+  const appBtn = $("#appBtn");
+  appBtn.href = APP_URL;
+
+  document.querySelectorAll(".chip").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".chip").forEach(b => b.classList.remove("is-active"));
+      btn.classList.add("is-active");
+      mode = btn.dataset.mode;
+    });
+  });
+
+  drawBtn.addEventListener("click", draw);
+  cardEl.addEventListener("click", draw);
+  resetBtn.addEventListener("click", reset);
+
+  let locked = false;
+
+  function draw(){
+    if(locked) return;
+    locked = true;
+
+    cardEl.classList.remove("is-flip");
+    void cardEl.offsetWidth;
+    cardEl.classList.add("is-flip");
+
+    const pick = TAROT[Math.floor(Math.random() * TAROT.length)];
+    const payload = pick[mode];
+
+    setTimeout(() => {
+      showResult(pick, payload);
+      locked = false;
+    }, 420);
+  }
+
+  function showResult(card, payload){
+    resultArea.classList.remove("is-glow");
+    void resultArea.offsetWidth;
+    resultArea.classList.add("is-glow");
+
+    resultBadge.textContent = `${card.name}｜${card.badge}`;
+    resultTime.textContent = nowText();
+
+    resultTitle.textContent = payload.title;
+    resultText.textContent = payload.text;
+
+    resultList.innerHTML = "";
+    payload.actions.forEach(t => {
+      const li = document.createElement("li");
+      li.textContent = t;
+      resultList.appendChild(li);
+    });
+
+    appBtn.animate(
+      [
+        { transform: "translateY(0)" },
+        { transform: "translateY(-2px)" },
+        { transform: "translateY(0)" }
+      ],
+      { duration: 420, iterations: 1 }
+    );
+  }
+
+  function reset(){
+    resultBadge.textContent = "準備中";
+    resultTime.textContent = "—";
+    resultTitle.textContent = "カードを引くと、ここに結果が出ます";
+    resultText.textContent = "今のあなたに必要なメッセージを、やさしく具体的にお届けします。";
+    resultList.innerHTML = "<li>カードを引いたら、行動が表示されます</li>";
+    resultArea.classList.remove("is-glow");
+  }
+
+  function nowText(){
+    const d = new Date();
+    const pad = (n) => String(n).padStart(2,"0");
+    return `${d.getFullYear()}/${pad(d.getMonth()+1)}/${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  }
+  </script>
+</body>
+</html>
